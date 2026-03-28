@@ -1,0 +1,863 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Widget</class>
+ <widget class="QWidget" name="Widget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>900</width>
+    <height>700</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>900</width>
+    <height>700</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1200</width>
+    <height>800</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>MQTT环境监测系统</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="images.qrc">
+    <normaloff>:/new/prefix1/images/EMS.png</normaloff>:/new/prefix1/images/EMS.png</iconset>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QWidget {
+    background-color: #f5f7fa;
+    font-family: &quot;Microsoft YaHei&quot;, &quot;Segoe UI&quot;, sans-serif;
+}
+
+QGroupBox {
+    border: 2px solid #d1d9e6;
+    border-radius: 8px;
+    margin-top: 10px;
+    padding-top: 15px;
+    background-color: white;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 15px;
+    padding: 0 10px 0 10px;
+}
+
+QPushButton {
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 20px;
+    font-weight: bold;
+    font-size: 12pt;
+    min-width: 120px;
+}
+
+QPushButton:hover {
+    background-color: #3a80d2;
+}
+
+QPushButton:pressed {
+    background-color: #2a70c2;
+}
+
+QPushButton#connectButton {
+    background-color: #27ae60;
+    font-size: 14pt;
+    padding: 12px 30px;
+}
+
+QPushButton#connectButton:hover {
+    background-color: #219955;
+}
+
+QPushButton#connectButton:pressed {
+    background-color: #1d874a;
+}
+
+QPushButton#disconnectButton {
+    background-color: #e74c3c;
+}
+
+QPushButton#disconnectButton:hover {
+    background-color: #d62c1a;
+}
+
+QLineEdit, QComboBox {
+    border: 2px solid #d1d9e6;
+    border-radius: 6px;
+    padding: 10px;
+    font-size: 11pt;
+    background-color: white;
+    min-height: 20px;
+}
+
+QLineEdit:focus, QComboBox:focus {
+    border-color: #4a90e2;
+    background-color: #f8fafd;
+}
+
+QLabel {
+    color: #34495e;
+    font-size: 11pt;
+}
+
+QFrame#headerFrame {
+    background-color: white;
+    border-bottom: 3px solid #4a90e2;
+}
+
+QFrame#statusFrame {
+    background-color: #f8fafd;
+    border: 2px solid #d1d9e6;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+#statusLabel {
+    font-weight: bold;
+    font-size: 12pt;
+}</string>
+  </property>
+  <layout class="QHBoxLayout" name="mainHorizontalLayout">
+   <item>
+    <widget class="QGroupBox" name="deviceListGroup">
+     <property name="title">
+      <string>📑 设备列表</string>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>220</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <layout class="QVBoxLayout" name="deviceListLayout">
+      <property name="leftMargin">
+       <number>5</number>
+      </property>
+      <property name="topMargin">
+       <number>15</number>
+      </property>
+      <property name="rightMargin">
+       <number>5</number>
+      </property>
+      <property name="bottomMargin">
+       <number>5</number>
+      </property>
+      <item>
+       <widget class="QListWidget" name="deviceListWidget">
+        <property name="styleSheet">
+         <string notr="true">QListWidget { font-size: 11pt; border: none; background: white; }
+QListWidget::item { padding: 8px; border-bottom: 1px solid #f0f0f0; }
+QListWidget::item:hover { background-color: #f8fafd; border-left: 4px solid #4a90e2; }
+QListWidget::item:selected { background-color: #e3f2fd; color: #1565c0; border-left: 4px solid #1565c0; }</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <layout class="QVBoxLayout" name="verticalLayout_2">
+   <item>
+    <widget class="QFrame" name="headerFrame">
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>100</height>
+      </size>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::Shape::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Shadow::Raised</enum>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QLabel" name="titleLabel">
+        <property name="palette">
+         <palette>
+          <active>
+           <colorrole role="WindowText">
+            <brush brushstyle="SolidPattern">
+             <color alpha="255">
+              <red>44</red>
+              <green>62</green>
+              <blue>80</blue>
+             </color>
+            </brush>
+           </colorrole>
+           <colorrole role="Button">
+            <brush brushstyle="LinearGradientPattern">
+             <gradient startx="0.000000000000000" starty="0.000000000000000" endx="1.000000000000000" endy="0.000000000000000" type="LinearGradient" spread="PadSpread" coordinatemode="ObjectBoundingMode">
+              <gradientstop position="0.000000000000000">
+               <color alpha="255">
+                <red>52</red>
+                <green>152</green>
+                <blue>219</blue>
+               </color>
+              </gradientstop>
+              <gradientstop position="1.000000000000000">
+               <color alpha="255">
+                <red>46</red>
+                <green>204</green>
+                <blue>113</blue>
+               </color>
+              </gradientstop>
+             </gradient>
+            </brush>
+           </colorrole>
+           <colorrole role="Text">
+            <brush brushstyle="SolidPattern">
+             <color alpha="255">
+              <red>44</red>
+              <green>62</green>
+              <blue>80</blue>
+             </color>
+            </brush>
+           </colorrole>
+           <colorrole role="ButtonText">
+            <brush brushstyle="SolidPattern">
+             <color alpha="255">
+              <red>44</red>
+              <green>62</green>
+              <blue>80</blue>
+             </color>
+            </brush>
+           </colorrole>
+           <colorrole role="Base">
+            <brush brushstyle="LinearGradientPattern">
+             <gradient startx="0.000000000000000" starty="0.000000000000000" endx="1.000000000000000" endy="0.000000000000000" type="LinearGradient" spread="PadSpread" coordinatemode="ObjectBoundingMode">
+              <gradientstop position="0.000000000000000">
+               <color alpha="255">
+                <red>52</red>
+                <green>152</green>
+                <blue>219</blue>
+               </color>
+              </gradientstop>
+              <gradientstop position="1.000000000000000">
+               <color alpha="255">
+                <red>46</red>
+                <green>204</green>
+                <blue>113</blue>
+               </color>
+              </gradientstop>
+             </gradient>
+            </brush>
+           </colorrole>
+           <colorrole role="Window">
+            <brush brushstyle="LinearGradientPattern">
+             <gradient startx="0.000000000000000" starty="0.000000000000000" endx="1.000000000000000" endy="0.000000000000000" type="LinearGradient" spread="PadSpread" coordinatemode="ObjectBoundingMode">
+              <gradientstop position="0.000000000000000">
+               <color alpha="255">
+                <red>52</red>
+                <green>152</green>
+                <blue>219</blue>
+               </color>
+              </gradientstop>
+              <gradientstop position="1.000000000000000">
+               <color alpha="255">
+                <red>46</red>
+                <green>204</green>
+                <blue>113</blue>
+               </color>
+              </gradientstop>
+             </gradient>
+            </brush>
+           </colorrole>
+           <colorrole role="PlaceholderText">
+            <brush brushstyle="SolidPattern">
+             <color alpha="128">
+              <red>44</red>
+              <green>62</green>
+              <blue>80</blue>
+             </color>
+            </brush>
+           </colorrole>
+          </active>
+          <inactive>
+           <colorrole role="WindowText">
+            <brush brushstyle="SolidPattern">
+             <color alpha="255">
+              <red>44</red>
+              <green>62</green>
+              <blue>80</blue>
+             </color>
+            </brush>
+           </colorrole>
+           <colorrole role="Button">
+            <brush brushstyle="LinearGradientPattern">
+             <gradient startx="0.000000000000000" starty="0.000000000000000" endx="1.000000000000000" endy="0.000000000000000" type="LinearGradient" spread="PadSpread" coordinatemode="ObjectBoundingMode">
+              <gradientstop position="0.000000000000000">
+               <color alpha="255">
+                <red>52</red>
+                <green>152</green>
+                <blue>219</blue>
+               </color>
+              </gradientstop>
+              <gradientstop position="1.000000000000000">
+               <color alpha="255">
+                <red>46</red>
+                <green>204</green>
+                <blue>113</blue>
+               </color>
+              </gradientstop>
+             </gradient>
+            </brush>
+           </colorrole>
+           <colorrole role="Text">
+            <brush brushstyle="SolidPattern">
+             <color alpha="255">
+              <red>44</red>
+              <green>62</green>
+              <blue>80</blue>
+             </color>
+            </brush>
+           </colorrole>
+           <colorrole role="ButtonText">
+            <brush brushstyle="SolidPattern">
+             <color alpha="255">
+              <red>44</red>
+              <green>62</green>
+              <blue>80</blue>
+             </color>
+            </brush>
+           </colorrole>
+           <colorrole role="Base">
+            <brush brushstyle="LinearGradientPattern">
+             <gradient startx="0.000000000000000" starty="0.000000000000000" endx="1.000000000000000" endy="0.000000000000000" type="LinearGradient" spread="PadSpread" coordinatemode="ObjectBoundingMode">
+              <gradientstop position="0.000000000000000">
+               <color alpha="255">
+                <red>52</red>
+                <green>152</green>
+                <blue>219</blue>
+               </color>
+              </gradientstop>
+              <gradientstop position="1.000000000000000">
+               <color alpha="255">
+                <red>46</red>
+                <green>204</green>
+                <blue>113</blue>
+               </color>
+              </gradientstop>
+             </gradient>
+            </brush>
+           </colorrole>
+           <colorrole role="Window">
+            <brush brushstyle="LinearGradientPattern">
+             <gradient startx="0.000000000000000" starty="0.000000000000000" endx="1.000000000000000" endy="0.000000000000000" type="LinearGradient" spread="PadSpread" coordinatemode="ObjectBoundingMode">
+              <gradientstop position="0.000000000000000">
+               <color alpha="255">
+                <red>52</red>
+                <green>152</green>
+                <blue>219</blue>
+               </color>
+              </gradientstop>
+              <gradientstop position="1.000000000000000">
+               <color alpha="255">
+                <red>46</red>
+                <green>204</green>
+                <blue>113</blue>
+               </color>
+              </gradientstop>
+             </gradient>
+            </brush>
+           </colorrole>
+           <colorrole role="PlaceholderText">
+            <brush brushstyle="SolidPattern">
+             <color alpha="128">
+              <red>44</red>
+              <green>62</green>
+              <blue>80</blue>
+             </color>
+            </brush>
+           </colorrole>
+          </inactive>
+          <disabled>
+           <colorrole role="WindowText">
+            <brush brushstyle="SolidPattern">
+             <color alpha="255">
+              <red>44</red>
+              <green>62</green>
+              <blue>80</blue>
+             </color>
+            </brush>
+           </colorrole>
+           <colorrole role="Button">
+            <brush brushstyle="LinearGradientPattern">
+             <gradient startx="0.000000000000000" starty="0.000000000000000" endx="1.000000000000000" endy="0.000000000000000" type="LinearGradient" spread="PadSpread" coordinatemode="ObjectBoundingMode">
+              <gradientstop position="0.000000000000000">
+               <color alpha="255">
+                <red>52</red>
+                <green>152</green>
+                <blue>219</blue>
+               </color>
+              </gradientstop>
+              <gradientstop position="1.000000000000000">
+               <color alpha="255">
+                <red>46</red>
+                <green>204</green>
+                <blue>113</blue>
+               </color>
+              </gradientstop>
+             </gradient>
+            </brush>
+           </colorrole>
+           <colorrole role="Text">
+            <brush brushstyle="SolidPattern">
+             <color alpha="255">
+              <red>44</red>
+              <green>62</green>
+              <blue>80</blue>
+             </color>
+            </brush>
+           </colorrole>
+           <colorrole role="ButtonText">
+            <brush brushstyle="SolidPattern">
+             <color alpha="255">
+              <red>44</red>
+              <green>62</green>
+              <blue>80</blue>
+             </color>
+            </brush>
+           </colorrole>
+           <colorrole role="Base">
+            <brush brushstyle="LinearGradientPattern">
+             <gradient startx="0.000000000000000" starty="0.000000000000000" endx="1.000000000000000" endy="0.000000000000000" type="LinearGradient" spread="PadSpread" coordinatemode="ObjectBoundingMode">
+              <gradientstop position="0.000000000000000">
+               <color alpha="255">
+                <red>52</red>
+                <green>152</green>
+                <blue>219</blue>
+               </color>
+              </gradientstop>
+              <gradientstop position="1.000000000000000">
+               <color alpha="255">
+                <red>46</red>
+                <green>204</green>
+                <blue>113</blue>
+               </color>
+              </gradientstop>
+             </gradient>
+            </brush>
+           </colorrole>
+           <colorrole role="Window">
+            <brush brushstyle="LinearGradientPattern">
+             <gradient startx="0.000000000000000" starty="0.000000000000000" endx="1.000000000000000" endy="0.000000000000000" type="LinearGradient" spread="PadSpread" coordinatemode="ObjectBoundingMode">
+              <gradientstop position="0.000000000000000">
+               <color alpha="255">
+                <red>52</red>
+                <green>152</green>
+                <blue>219</blue>
+               </color>
+              </gradientstop>
+              <gradientstop position="1.000000000000000">
+               <color alpha="255">
+                <red>46</red>
+                <green>204</green>
+                <blue>113</blue>
+               </color>
+              </gradientstop>
+             </gradient>
+            </brush>
+           </colorrole>
+           <colorrole role="PlaceholderText">
+            <brush brushstyle="SolidPattern">
+             <color alpha="128">
+              <red>44</red>
+              <green>62</green>
+              <blue>80</blue>
+             </color>
+            </brush>
+           </colorrole>
+          </disabled>
+         </palette>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QWidget {
+    background-color: #f8fafd;
+    font-family: &quot;Microsoft YaHei&quot;, &quot;Segoe UI&quot;, sans-serif;
+}
+
+QGroupBox {
+    border: 2px solid #d1d9e6;
+    border-radius: 10px;
+    margin-top: 10px;
+    padding-top: 20px;
+    background-color: white;
+    font-weight: bold;
+    color: #2c3e50;
+    font-size: 12pt;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 20px;
+    padding: 0 15px 0 15px;
+    background-color: white;
+}
+
+QLabel {
+    font-size: 11pt;
+}
+
+#titleLabel {
+    font-size: 20pt;
+    font-weight: bold;
+    color: #2c3e50;
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+                                stop:0 #3498db, stop:1 #2ecc71);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+#tempValueLabel, #humidityValueLabel {
+    font-size: 36pt;
+    font-weight: bold;
+}
+
+#statusLabel {
+    font-size: 12pt;
+    font-weight: bold;
+    padding: 8px 15px;
+    border-radius: 20px;
+}</string>
+        </property>
+        <property name="text">
+         <string>环境监测系统</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Orientation::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
+      <string>🔌 MQTT连接设置</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>服务器地址:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="serverEdit">
+        <property name="placeholderText">
+         <string>例如: 82.157.129.239</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>端口:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QLineEdit" name="portEdit">
+        <property name="maximumSize">
+         <size>
+          <width>100</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="placeholderText">
+         <string>1883</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>订阅主题:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1" colspan="2">
+       <widget class="QLineEdit" name="topicEdit">
+        <property name="placeholderText">
+         <string>例如: sensor/data</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="QPushButton" name="connectButton">
+        <property name="text">
+         <string>连接</string>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>:/icons/connect.png</normaloff>:/icons/connect.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0" colspan="4">
+       <widget class="QFrame" name="statusFrame">
+        <property name="frameShape">
+         <enum>QFrame::Shape::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Shadow::Sunken</enum>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_3">
+         <item>
+          <widget class="QLabel" name="label_4">
+           <property name="text">
+            <string>连接状态:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="statusLabel">
+           <property name="text">
+            <string>未连接</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <spacer name="verticalSpacer_2">
+     <property name="orientation">
+      <enum>Qt::Orientation::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>30</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox_2">
+     <property name="title">
+      <string>🚀 功能操作</string>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <widget class="QPushButton" name="dataWindowButton">
+        <property name="text">
+         <string>📊 环境数据</string>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>:/icons/data.png</normaloff>:/icons/data.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>24</width>
+          <height>24</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="historyWindowButton">
+        <property name="text">
+         <string>📈 历史记录</string>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>:/icons/history.png</normaloff>:/icons/history.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>24</width>
+          <height>24</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="logWindowButton">
+        <property name="text">
+         <string>📝 系统日志</string>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>:/icons/log.png</normaloff>:/icons/log.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>24</width>
+          <height>24</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="settingsButton">
+        <property name="text">
+         <string>⚙️ 系统设置</string>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>:/icons/settings.png</normaloff>:/icons/settings.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>24</width>
+          <height>24</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <spacer name="verticalSpacer_3">
+     <property name="orientation">
+      <enum>Qt::Orientation::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox_3">
+     <property name="title">
+      <string>📋 实时数据概览</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_2">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_5">
+        <property name="text">
+         <string>最后接收时间:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLabel" name="lastUpdateTimeLabel">
+        <property name="styleSheet">
+         <string notr="true">font-weight: bold;
+color: #2c3e50;</string>
+        </property>
+        <property name="text">
+         <string>--</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_11">
+        <property name="text">
+         <string>数据接收次数:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLabel" name="dataCountLabel">
+        <property name="styleSheet">
+         <string notr="true">font-weight: bold;
+font-size: 14pt;
+color: #27ae60;</string>
+        </property>
+        <property name="text">
+         <string>0</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QLabel" name="label_7">
+        <property name="text">
+         <string>当前温度:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QLabel" name="label_9">
+        <property name="text">
+         <string>当前湿度:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QLabel" name="currentTempLabel">
+        <property name="styleSheet">
+         <string notr="true">font-weight: bold;
+font-size: 14pt;
+color: #e74c3c;</string>
+        </property>
+        <property name="text">
+         <string>-- °C</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="QLabel" name="currentHumidityLabel">
+        <property name="styleSheet">
+         <string notr="true">font-weight: bold;
+font-size: 14pt;
+color: #3498db;</string>
+        </property>
+        <property name="text">
+         <string>-- %</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+    </item>
+   </layout>
+  </item>
+ </layout>
+</widget>
+ <resources>
+  <include location="images.qrc"/>
+ </resources>
+ <connections/>
+</ui>

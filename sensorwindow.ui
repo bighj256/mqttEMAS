@@ -1,0 +1,380 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<ui version="4.0">
+ <class>SensorWindow</class>
+ <widget class="QWidget" name="SensorWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>830</width>
+    <height>773</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>500</width>
+    <height>400</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>环境数据监测</string>
+  </property>
+  <property name="windowIcon">
+   <iconset theme="QIcon::ThemeIcon::DocumentOpenRecent" />
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QWidget {
+    background-color: #f8fafd;
+    font-family: "Microsoft YaHei", "Segoe UI", sans-serif;
+}
+
+QGroupBox {
+    border: 2px solid #d1d9e6;
+    border-radius: 10px;
+    margin-top: 10px;
+    padding-top: 20px;
+    background-color: white;
+    font-weight: bold;
+    color: #2c3e50;
+    font-size: 12pt;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 20px;
+    padding: 0 15px 0 15px;
+    background-color: white;
+}
+
+QLabel {
+    font-size: 11pt;
+}
+
+#titleLabel {
+    font-size: 20pt;
+    font-weight: bold;
+    color: #2c3e50;
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+                                stop:0 #3498db, stop:1 #2ecc71);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+#tempValueLabel, #humidityValueLabel, #stateLabel {
+    font-size: 36pt;
+    font-weight: bold;
+}
+
+#statusLabel {
+    font-size: 12pt;
+    font-weight: bold;
+    padding: 8px 15px;
+    border-radius: 20px;
+}</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QLabel" name="titleLabel">
+     <property name="styleSheet">
+      <string notr="true">QWidget {
+    background-color: #f8fafd;
+    font-family: "Microsoft YaHei", "Segoe UI", sans-serif;
+}
+
+QGroupBox {
+    border: 2px solid #d1d9e6;
+    border-radius: 10px;
+    margin-top: 10px;
+    padding-top: 20px;
+    background-color: white;
+    font-weight: bold;
+    color: #2c3e50;
+    font-size: 12pt;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 20px;
+    padding: 0 15px 0 15px;
+    background-color: white;
+}
+
+QLabel {
+    font-size: 11pt;
+}
+
+#titleLabel {
+    font-size: 20pt;
+    font-weight: bold;
+    color: #2c3e50;
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+                                stop:0 #3498db, stop:1 #2ecc71);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+#tempValueLabel, #humidityValueLabel, #stateLabel {
+    font-size: 36pt;
+    font-weight: bold;
+}
+
+#statusLabel {
+    font-size: 12pt;
+    font-weight: bold;
+    padding: 8px 15px;
+    border-radius: 20px;
+}</string>
+     </property>
+     <property name="text">
+      <string> 实时环境数据监测</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignmentFlag::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QGridLayout" name="gridLayout_cards">
+     <item row="0" column="0">
+      <widget class="QGroupBox" name="temperatureGroupBox">
+       <property name="title">
+        <string>🌡️ 温度监测</string>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QLabel" name="tempValueLabel">
+          <property name="text">
+           <string>-- °C</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignmentFlag::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QProgressBar" name="tempProgressBar">
+          <property name="value">
+           <number>0</number>
+          </property>
+          <property name="textVisible">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <widget class="QLabel" name="label">
+            <property name="text">
+             <string>低温</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer">
+            <property name="orientation">
+             <enum>Qt::Orientation::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_3">
+            <property name="text">
+             <string>正常</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Orientation::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_4">
+            <property name="text">
+             <string>高温</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QGroupBox" name="humidityGroupBox">
+       <property name="title">
+        <string>💧 湿度监测</string>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <widget class="QLabel" name="humidityValueLabel">
+          <property name="text">
+           <string>-- %</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignmentFlag::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QProgressBar" name="humidityProgressBar">
+          <property name="value">
+           <number>0</number>
+          </property>
+          <property name="textVisible">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <widget class="QLabel" name="label_5">
+            <property name="text">
+             <string>干燥</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_3">
+            <property name="orientation">
+             <enum>Qt::Orientation::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_6">
+            <property name="text">
+             <string>舒适</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_4">
+            <property name="orientation">
+             <enum>Qt::Orientation::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_7">
+            <property name="text">
+             <string>潮湿</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QGroupBox" name="groupBox">
+       <property name="title">
+        <string>🔍 状态监测</string>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <item>
+         <widget class="QLabel" name="stateLabel">
+          <property name="text">
+           <string>--</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignmentFlag::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QGroupBox" name="infoGroupBox">
+       <property name="title">
+        <string>📋 设备信息</string>
+       </property>
+       <layout class="QGridLayout" name="gridLayout">
+        <item row="1" column="1">
+         <widget class="QLabel" name="updateTimeLabel">
+          <property name="styleSheet">
+           <string notr="true">font-weight: bold;
+color: #7f8c8d;</string>
+          </property>
+          <property name="text">
+           <string>--</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_8">
+          <property name="text">
+           <string>设备ID:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLabel" name="deviceIdLabel">
+          <property name="styleSheet">
+           <string notr="true">font-weight: bold;
+color: #2c3e50;</string>
+          </property>
+          <property name="text">
+           <string>--</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_10">
+          <property name="text">
+           <string>更新时间:</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QLabel" name="statusLabel">
+     <property name="text">
+      <string>等待数据...</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignmentFlag::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources />
+ <connections />
+</ui>

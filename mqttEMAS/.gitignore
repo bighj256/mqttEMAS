@@ -1,0 +1,25 @@
+# Keil C51 Build Output Directories
+Listings/
+Objects/
+
+# User-specific Keil Settings
+*.uvgui.*
+*.uvguix.*
+
+# Backup files
+*.bak
+*.old
+
+# Intermediate Build Files (if not inside Objects/Listings)
+*.obj
+*.lst
+*.m51
+*.hex
+*.lnp
+*.dep
+*.plg
+*.iex
+*.htm
+
+# VSCode workspace (optional, uncomment if you don't want to commit local vscode settings)
+# .vscode/
