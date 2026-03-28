@@ -338,6 +338,9 @@ void Widget::on_historyWindowButton_clicked() {
     connect(historyWindow, &QObject::destroyed,
             [this]() { historyWindow.clear(); });
   }
+  // 在显示之前，强制同步一下当前的主界面设备选择器的过滤条件
+  historyWindow->setDeviceFilter(m_currentSelectedDevice);
+  
   historyWindow->show();
   historyWindow->raise();
   historyWindow->activateWindow();

@@ -131,17 +131,20 @@ void HistoryWindow::loadGlobalHistory()
 void HistoryWindow::updateStatistics()
 {
     currentStats = Statistics();
-    currentStats.totalCount = Widget::globalHistory.size();
 
-    if (currentStats.totalCount == 0) {
-        updateDisplay();
-        return;
-    }
-
+    int matchCount = 0;
     double tempSum = 0;
     double humiditySum = 0;
 
     for (const QString& itemText : Widget::globalHistory) {
+        if (m_currentFilter != "所有设备") {
+            if (!itemText.contains(QString("设备: %1").arg(m_currentFilter))) {
+                continue;
+            }
+        }
+
+        matchCount++;
+        
         double temp = 0, humidity = 0;
         parseHistoryItem(itemText, temp, humidity);
 
@@ -156,8 +159,12 @@ void HistoryWindow::updateStatistics()
         }
     }
 
-    currentStats.avgTemperature = tempSum / currentStats.totalCount;
-    currentStats.avgHumidity = humiditySum / currentStats.totalCount;
+    currentStats.totalCount = matchCount;
+
+    if (currentStats.totalCount > 0) {
+        currentStats.avgTemperature = tempSum / currentStats.totalCount;
+        currentStats.avgHumidity = humiditySum / currentStats.totalCount;
+    }
 
     updateDisplay();
 }
