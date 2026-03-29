@@ -64,7 +64,8 @@ Widget::Widget(QWidget *parent)
   // 监听后台数据库初始化结果
   connect(&DbManager::instance(), &DbManager::connectResult, this, [this](bool success, const QString& errorMsg) {
     if (success) {
-      addLogMessage("已连接到远程 SQL Server 数据持久化库 (后台多线程)", "success");
+      addLogMessage("已连接到远程 SQL Server 数据库", "success");
+        addLogMessage("正在从数据库同步数据...");
       DbManager::instance().requestLatestSensorDataAsync(500);
     } else {
       addLogMessage(QString("连接远程 SQL Server 失败: %1，将仅使用内存记录历史").arg(errorMsg), "warning");
