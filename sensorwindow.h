@@ -23,7 +23,6 @@ public:
     ~SensorWindow();
     void updateData(const SensorData &data);  // 更新传感器数据
     void clearData();                         // 清空数据
-    void clearChart();                        // 清空图表
     SensorData getCurrentData() const { return currentData; }  // 获取当前数据
 
 signals:

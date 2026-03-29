@@ -8,6 +8,7 @@
 #include <QJsonParseError>
 #include <QRegularExpression>
 #include <QDateTime>
+#include <QMetaType>
 
 /*数据解析器，用于将原始字符串数据(JSON/CSV/键值对)解析为传感器数据
  * 支持自动识别输入格式，并进行有效性检验*/
@@ -63,5 +64,7 @@ private:
     bool validateData(const SensorData &data);
 
 };
+
+Q_DECLARE_METATYPE(SensorData);
 
 #endif // DATAPARSER_H

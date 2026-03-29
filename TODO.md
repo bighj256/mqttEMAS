@@ -19,7 +19,7 @@
 - [ ] **阈值报警与通知 (Alarms & Notifications)**
   - *扩展建议*: 允许用户在设置窗口中针对每个传感器设定温度/湿度的上下限安全阈值（如：温度持续 > 40°C 则报警）。
   -触发报警时可以通过弹窗、发出提示音 ( `QSoundEffect` )，或在系统托盘 (`QSystemTrayIcon`) 弹出消息通知。
-- [x] **多设备/多节点分类管理 (Multi-Device Management)**
+- [ ] **多设备/多节点分类管理 (Multi-Device Management)**
   - *当前状态*: `DataParser` 已经能够解析出 `deviceId`，但主界面展示可能没有按设备严格区分。
   - *扩展建议*: 增加一个“设备列表”侧边栏或表格视图（QTreeView / QTableView），当不同 `deviceId` 接入时自动注册设备节点，点击某个设备即可查看该设备独立的温湿度数据和历史记录。
 - [ ] **反向控制与下发指令 (Command Publishing)**

@@ -18,8 +18,6 @@ public:
     explicit HistoryWindow(Widget *mainWidget, QWidget *parent = nullptr);  // explicit防止隐式类型转换
     ~HistoryWindow();
 
-    void setDeviceFilter(const QString &device);
-
 private slots:
     void onExportClicked();                                 // 导出按钮
     void onClearClicked();                                  // 清空按钮
@@ -45,7 +43,6 @@ private:
 
     Ui::HistoryWindow *ui;             // 指向自定生成UI控件的组件
     Statistics currentStats;           // 缓存当前统计结果
-    QString m_currentFilter = "所有设备"; // 当前要过滤显示的设备ID
 };
 
 #endif // HISTORYWINDOW_H

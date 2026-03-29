@@ -7,9 +7,6 @@
 #include <QStringList>
 #include <QSettings>
 #include <QTimer>
-#include <QSet>
-#include <QMap>
-#include "dataparser.h"
 
 namespace Ui {
 class Widget;
@@ -65,9 +62,6 @@ private slots:
 
     //自动断线重连槽函数
     void tryReconnect();
-
-    //设备列表选择改变
-    void onDeviceSelectionChanged(const QString &device);
 private:
     Ui::Widget *ui;            //UI对象
     QMqttClient *mqttClient;  //MQTT客户端
@@ -83,10 +77,6 @@ private:
     int dataCount = 0;
     QString lastUpdateTime;
     bool connectState = false;
-
-    QSet<QString> m_knownDevices;
-    QString m_currentSelectedDevice;
-    QMap<QString, SensorData> m_deviceLatestData;
 
     //在主窗口概览数据信息
     void updateMainWindowData(const QString &temp, const QString &humidity,

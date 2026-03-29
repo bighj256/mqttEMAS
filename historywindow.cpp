@@ -99,12 +99,6 @@ void HistoryWindow::loadGlobalHistory()
     ui->historyList->clear();
 
     for (const QString& itemText : Widget::globalHistory) {
-        if (m_currentFilter != "所有设备") {
-            if (!itemText.contains(QString("设备: %1").arg(m_currentFilter))) {
-                continue;
-            }
-        }
-        
         QListWidgetItem* listItem = new QListWidgetItem(itemText);
         if (itemText.contains("温度:", Qt::CaseInsensitive)) {
             QRegularExpression tempRegex("温度:\\s*(\\d+\\.?\\d*)");
@@ -131,20 +125,17 @@ void HistoryWindow::loadGlobalHistory()
 void HistoryWindow::updateStatistics()
 {
     currentStats = Statistics();
+    currentStats.totalCount = Widget::globalHistory.size();
 
-    int matchCount = 0;
+    if (currentStats.totalCount == 0) {
+        updateDisplay();
+        return;
+    }
+
     double tempSum = 0;
     double humiditySum = 0;
 
     for (const QString& itemText : Widget::globalHistory) {
-        if (m_currentFilter != "所有设备") {
-            if (!itemText.contains(QString("设备: %1").arg(m_currentFilter))) {
-                continue;
-            }
-        }
-
-        matchCount++;
-        
         double temp = 0, humidity = 0;
         parseHistoryItem(itemText, temp, humidity);
 
@@ -159,12 +150,8 @@ void HistoryWindow::updateStatistics()
         }
     }
 
-    currentStats.totalCount = matchCount;
-
-    if (currentStats.totalCount > 0) {
-        currentStats.avgTemperature = tempSum / currentStats.totalCount;
-        currentStats.avgHumidity = humiditySum / currentStats.totalCount;
-    }
+    currentStats.avgTemperature = tempSum / currentStats.totalCount;
+    currentStats.avgHumidity = humiditySum / currentStats.totalCount;
 
     updateDisplay();
 }
@@ -237,12 +224,6 @@ bool HistoryWindow::exportHistory(const QString &filename)
     for (int i = Widget::globalHistory.size() - 1; i >= 0; --i) {
         QString itemText = Widget::globalHistory[i];
 
-        if (m_currentFilter != "所有设备") {
-            if (!itemText.contains(QString("设备: %1").arg(m_currentFilter))) {
-                continue;
-            }
-        }
-
         QString time, temp, humidity, device;
         QStringList parts = itemText.split(" | ");
         for (const QString &part : parts) {
@@ -298,12 +279,6 @@ void HistoryWindow::onItemClicked(QListWidgetItem *item)
 //实时更新历史数据
 void HistoryWindow::onHistoryItemAdded(const QString &item)
 {
-    if (m_currentFilter != "所有设备") {
-        if (!item.contains(QString("设备: %1").arg(m_currentFilter))) {
-            return;
-        }
-    }
-
     // 插入到顶部（最新在前）
     QListWidgetItem* listItem = new QListWidgetItem(item);
 
@@ -329,11 +304,5 @@ void HistoryWindow::onHistoryItemAdded(const QString &item)
 
     // 更新统计
     updateStatistics();
-}
-
-void HistoryWindow::setDeviceFilter(const QString &device) {
-    if (m_currentFilter == device) return;
-    m_currentFilter = device;
-    loadGlobalHistory();
 }
 

@@ -128,46 +128,7 @@ QFrame#statusFrame {
     font-size: 12pt;
 }</string>
   </property>
-  <layout class="QHBoxLayout" name="mainHorizontalLayout">
-   <item>
-    <widget class="QGroupBox" name="deviceListGroup">
-     <property name="title">
-      <string>📑 设备列表</string>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>220</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <layout class="QVBoxLayout" name="deviceListLayout">
-      <property name="leftMargin">
-       <number>5</number>
-      </property>
-      <property name="topMargin">
-       <number>15</number>
-      </property>
-      <property name="rightMargin">
-       <number>5</number>
-      </property>
-      <property name="bottomMargin">
-       <number>5</number>
-      </property>
-      <item>
-       <widget class="QListWidget" name="deviceListWidget">
-        <property name="styleSheet">
-         <string notr="true">QListWidget { font-size: 11pt; border: none; background: white; }
-QListWidget::item { padding: 8px; border-bottom: 1px solid #f0f0f0; }
-QListWidget::item:hover { background-color: #f8fafd; border-left: 4px solid #4a90e2; }
-QListWidget::item:selected { background-color: #e3f2fd; color: #1565c0; border-left: 4px solid #1565c0; }</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
-    <layout class="QVBoxLayout" name="verticalLayout_2">
+  <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
     <widget class="QFrame" name="headerFrame">
      <property name="maximumSize">
@@ -851,11 +812,9 @@ color: #3498db;</string>
       </item>
      </layout>
     </widget>
-    </item>
-   </layout>
-  </item>
- </layout>
-</widget>
+   </item>
+  </layout>
+ </widget>
  <resources>
   <include location="images.qrc"/>
  </resources>

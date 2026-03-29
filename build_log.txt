@@ -1,0 +1,15 @@
+==========================================
+Starting Qt Debug Build...
+Project File: mqttEMAS2.pro
+==========================================
+[1/2] Running qmake...
+[2/2] Running mingw32-make...
+mingw32-make -f Makefile.Debug
+mingw32-make[1]: Entering directory 'H:/MyQtProject/mqttEMAS2/build-debug'
+mingw32-make[1]: Nothing to be done for 'first'.
+mingw32-make[1]: Leaving directory 'H:/MyQtProject/mqttEMAS2/build-debug'
+==========================================
+Build successful! The generated exe file is usually located in the build-debug\debug directory.
+==========================================
+请按任意键继续. . . 
+终止批处理操作吗(Y/N)? 

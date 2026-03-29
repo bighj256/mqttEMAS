@@ -234,16 +234,9 @@ void SensorWindow::updateData(const SensorData &data)
 //删除数据
 void SensorWindow::clearData()
 {
-    clearChart();
     SensorData emptyData;
     emptyData.isValid = false;
     updateData(emptyData);
-}
-
-void SensorWindow::clearChart()
-{
-    if (m_tempSeries) m_tempSeries->clear();
-    if (m_humSeries) m_humSeries->clear();
 }
 
 //更新状态条

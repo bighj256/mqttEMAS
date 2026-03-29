@@ -25,12 +25,6 @@ Widget::Widget(QWidget *parent)
       dataParser(new DataParser(this)) {
   ui->setupUi(this);
 
-  // 初始化设备列表
-  m_currentSelectedDevice = "所有设备";
-  ui->deviceListWidget->addItem("所有设备");
-  ui->deviceListWidget->setCurrentRow(0);
-  connect(ui->deviceListWidget, &QListWidget::currentTextChanged, this, &Widget::onDeviceSelectionChanged);
-
   // 设置窗口
   setWindowTitle("MQTT环境监测系统 v1.3.0");
   setMinimumSize(900, 700);
@@ -67,14 +61,18 @@ Widget::Widget(QWidget *parent)
   addLogMessage("系统启动完成", "info");
   addLogMessage("MQTT环境监测系统已就绪", "success");
 
-  // 连接远程 SQL Server 82.157.129.239:1433
-  if (DbManager::instance().connectSqlServer("82.157.129.239", 1433, "mqttEMAS",
-                                             "sa", "QWEasdZXC123!")) {
-    addLogMessage("已连接到远程 SQL Server 数据持久化库 (82.157.129.239)",
-                  "success");
+  // 监听后台数据库初始化结果
+  connect(&DbManager::instance(), &DbManager::connectResult, this, [this](bool success, const QString& errorMsg) {
+    if (success) {
+      addLogMessage("已连接到远程 SQL Server 数据持久化库 (后台多线程)", "success");
+      DbManager::instance().requestLatestSensorDataAsync(500);
+    } else {
+      addLogMessage(QString("连接远程 SQL Server 失败: %1，将仅使用内存记录历史").arg(errorMsg), "warning");
+    }
+  });
 
-    // 导入最新的 500 条记录
-    QList<SensorData> pastData = DbManager::instance().getLatestSensorData(500);
+  // 监听后台数据库拉取历史数据完成信号
+  connect(&DbManager::instance(), &DbManager::latestDataReceived, this, [this](const QList<SensorData>& pastData) {
     if (!pastData.isEmpty()) {
       Widget::globalHistory.clear();
       for (const SensorData &data : pastData) {
@@ -82,24 +80,17 @@ Widget::Widget(QWidget *parent)
                                   .arg(data.timestamp)
                                   .arg(data.temperature, 0, 'f', 1)
                                   .arg(data.humidity, 0, 'f', 1);
-        
-        QString devId = data.deviceId.isEmpty() ? "未知" : data.deviceId;
         if (!data.deviceId.isEmpty()) {
           historyItem += QString(" | 设备: %1").arg(data.deviceId);
         }
         Widget::globalHistory.append(historyItem);
-        
-        if (!m_knownDevices.contains(devId)) {
-            m_knownDevices.insert(devId);
-            ui->deviceListWidget->addItem(devId);
-            m_deviceLatestData[devId] = data; 
-        }
       }
-      addLogMessage(QString("已成功从数据库导入最近 %1 条历史记录").arg(pastData.size()), "success");
+      addLogMessage(QString("已成功从后台数据库同步最近 %1 条历史记录").arg(pastData.size()), "success");
     }
-  } else {
-    addLogMessage("连接远程 SQL Server 失败，将仅使用内存记录历史", "warning");
-  }
+  });
+
+  // 下发异步连接指令，主程序完全不阻塞直接继续往下走
+  DbManager::instance().connectSqlServerAsync("82.157.129.239", 1433, "mqttEMAS", "sa", "QWEasdZXC123!");
 }
 
 Widget::~Widget() {
@@ -208,31 +199,21 @@ void Widget::onMessageReceived(const QByteArray &message,
     // 发射信号，通知监听者有新数据
     emit historyItemAdded(historyItem);
 
-    // 异步存入远端 SQL Server 数据库
-    DbManager::instance().insertSensorData(data);
+    // 后台异步存入远端 SQL Server 数据库
+    DbManager::instance().insertSensorDataAsync(data);
+
+    // 更新主界面显示
+    updateMainWindowData(QString::number(data.temperature, 'f', 1),
+                         QString::number(data.humidity, 'f', 1), currentTime,
+                         data.deviceId);
 
     dataCount++;
     ui->dataCountLabel->setText(QString::number(dataCount));
+    lastUpdateTime = currentTime;
 
-    // 更新设备列表
-    QString devId = data.deviceId.isEmpty() ? "未知" : data.deviceId;
-    if (!m_knownDevices.contains(devId)) {
-        m_knownDevices.insert(devId);
-        ui->deviceListWidget->addItem(devId);
-    }
-    m_deviceLatestData[devId] = data;
-
-    // 若当前为"所有设备" 或正是收到了选中设备的数据，更新面板
-    if (m_currentSelectedDevice == "所有设备" || m_currentSelectedDevice == devId) {
-        updateMainWindowData(QString::number(data.temperature, 'f', 1),
-                             QString::number(data.humidity, 'f', 1), currentTime,
-                             data.deviceId);
-        lastUpdateTime = currentTime;
-        
-        // 同步子窗口
-        if (sensorWindow) {
-          sensorWindow->updateData(data);
-        }
+    // 同步子窗口
+    if (sensorWindow) {
+      sensorWindow->updateData(data);
     }
 
     addLogMessage(QString("数据解析成功 - 温度: %1°C, 湿度: %2%")
@@ -338,9 +319,6 @@ void Widget::on_historyWindowButton_clicked() {
     connect(historyWindow, &QObject::destroyed,
             [this]() { historyWindow.clear(); });
   }
-  // 在显示之前，强制同步一下当前的主界面设备选择器的过滤条件
-  historyWindow->setDeviceFilter(m_currentSelectedDevice);
-  
   historyWindow->show();
   historyWindow->raise();
   historyWindow->activateWindow();
@@ -446,34 +424,5 @@ void Widget::tryReconnect() {
     // 使用新的 ClientId 避免冲突
     mqttClient->setClientId(QString("QtClient_%1_RC").arg(rand() % 1000));
     mqttClient->connectToHost();
-  }
-}
-
-void Widget::onDeviceSelectionChanged(const QString &device) {
-  m_currentSelectedDevice = device;
-  if (device == "所有设备") {
-      ui->currentTempLabel->setText("-- °C");
-      ui->currentHumidityLabel->setText("-- %");
-      ui->lastUpdateTimeLabel->setText("--");
-      if (sensorWindow) sensorWindow->clearData();
-  } else {
-      if (m_deviceLatestData.contains(device)) {
-          SensorData data = m_deviceLatestData[device];
-          updateMainWindowData(QString::number(data.temperature, 'f', 1),
-                               QString::number(data.humidity, 'f', 1),
-                               data.timestamp,
-                               data.deviceId);
-          if (sensorWindow) {
-              sensorWindow->clearData();
-              sensorWindow->updateData(data);
-          }
-      } else {
-          updateMainWindowData("--", "--", "--", device);
-          if (sensorWindow) sensorWindow->clearData();
-      }
-  }
-  
-  if (historyWindow) {
-      historyWindow->setDeviceFilter(device);
   }
 }
