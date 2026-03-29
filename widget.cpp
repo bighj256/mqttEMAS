@@ -6,13 +6,11 @@
 #include "sensorwindow.h"
 #include "ui_widget.h"
 
-
 #include <QDateTime>
 #include <QDebug>
 #include <QMessageBox>
 #include <QTime>
 #include <stdlib.h>
-
 
 // 最大历史记录条数
 static const int Max_size = 500;
@@ -62,36 +60,44 @@ Widget::Widget(QWidget *parent)
   addLogMessage("MQTT环境监测系统已就绪", "success");
 
   // 监听后台数据库初始化结果
-  connect(&DbManager::instance(), &DbManager::connectResult, this, [this](bool success, const QString& errorMsg) {
-    if (success) {
-      addLogMessage("已连接到远程 SQL Server 数据库", "success");
-        addLogMessage("正在从数据库同步数据...");
-      DbManager::instance().requestLatestSensorDataAsync(500);
-    } else {
-      addLogMessage(QString("连接远程 SQL Server 失败: %1，将仅使用内存记录历史").arg(errorMsg), "warning");
-    }
-  });
+  connect(&DbManager::instance(), &DbManager::connectResult, this,
+          [this](bool success, const QString &errorMsg) {
+            if (success) {
+              addLogMessage("已连接到远程 SQL Server 数据库", "success");
+              addLogMessage("正在从数据库同步数据...");
+              DbManager::instance().requestLatestSensorDataAsync(100);
+            } else {
+              addLogMessage(
+                  QString("连接远程 SQL Server 失败: %1，将仅使用内存记录历史")
+                      .arg(errorMsg),
+                  "warning");
+            }
+          });
 
   // 监听后台数据库拉取历史数据完成信号
-  connect(&DbManager::instance(), &DbManager::latestDataReceived, this, [this](const QList<SensorData>& pastData) {
-    if (!pastData.isEmpty()) {
-      Widget::globalHistory.clear();
-      for (const SensorData &data : pastData) {
-        QString historyItem = QString("%1 | 温度: %2°C | 湿度: %3%")
-                                  .arg(data.timestamp)
-                                  .arg(data.temperature, 0, 'f', 1)
-                                  .arg(data.humidity, 0, 'f', 1);
-        if (!data.deviceId.isEmpty()) {
-          historyItem += QString(" | 设备: %1").arg(data.deviceId);
-        }
-        Widget::globalHistory.append(historyItem);
-      }
-      addLogMessage(QString("已成功从后台数据库同步最近 %1 条历史记录").arg(pastData.size()), "success");
-    }
-  });
+  connect(&DbManager::instance(), &DbManager::latestDataReceived, this,
+          [this](const QList<SensorData> &pastData) {
+            if (!pastData.isEmpty()) {
+              Widget::globalHistory.clear();
+              for (const SensorData &data : pastData) {
+                QString historyItem = QString("%1 | 温度: %2°C | 湿度: %3%")
+                                          .arg(data.timestamp)
+                                          .arg(data.temperature, 0, 'f', 1)
+                                          .arg(data.humidity, 0, 'f', 1);
+                if (!data.deviceId.isEmpty()) {
+                  historyItem += QString(" | 设备: %1").arg(data.deviceId);
+                }
+                Widget::globalHistory.append(historyItem);
+              }
+              addLogMessage(QString("已成功从后台数据库同步最近 %1 条历史记录")
+                                .arg(pastData.size()),
+                            "success");
+            }
+          });
 
   // 下发异步连接指令，主程序完全不阻塞直接继续往下走
-  DbManager::instance().connectSqlServerAsync("82.157.129.239", 1433, "mqttEMAS", "sa", "QWEasdZXC123!");
+  DbManager::instance().connectSqlServerAsync(
+      "82.157.129.239", 1433, "mqttEMAS", "sa", "QWEasdZXC123!");
 }
 
 Widget::~Widget() {
@@ -112,7 +118,8 @@ void Widget::addLogMessage(const QString &message, const QString &type) {
 
 // 连接/断开按钮点击
 void Widget::on_connectButton_clicked() {
-  if (mqttClient->state() == QMqttClient::Disconnected && !reconnectTimer->isActive()) {
+  if (mqttClient->state() == QMqttClient::Disconnected &&
+      !reconnectTimer->isActive()) {
     QString hostname = ui->serverEdit->text().trimmed();
     QString port = ui->portEdit->text().trimmed();
     QString topic = ui->topicEdit->text().trimmed();
@@ -158,7 +165,7 @@ void Widget::on_connectButton_clicked() {
       addLogMessage("正在断开连接...", "info");
       mqttClient->disconnectFromHost();
     }
-    
+
     ui->connectButton->setText("连接");
   }
 }
@@ -233,7 +240,7 @@ void Widget::updateConnectionState() {
   switch (mqttClient->state()) {
   case QMqttClient::Disconnected:
     qDebug() << "MQTT状态: 未连接";
-    
+
     if (logWindow) {
       if (connectState) {
         addLogMessage(QString("已与服务器断开连接: %1").arg(hostname),
@@ -246,7 +253,8 @@ void Widget::updateConnectionState() {
         reconnectTimer->start(5000);
         addLogMessage("检测到意外断开，将在5秒后尝试自动重连...", "warning");
         ui->statusLabel->setText("等待重连...");
-        ui->statusLabel->setStyleSheet("QLabel { color: #e67e22; font-weight: bold; }");
+        ui->statusLabel->setStyleSheet(
+            "QLabel { color: #e67e22; font-weight: bold; }");
         ui->connectButton->setText("停止重连");
       }
     } else {
