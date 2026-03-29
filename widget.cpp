@@ -13,7 +13,7 @@
 #include <stdlib.h>
 
 // 最大历史记录条数
-static const int Max_size = 500;
+static const int Max_History_Data_Size = 500;
 
 // 用于即使未打开历史数据或者关闭历史数据窗口也可以保存历史
 QStringList Widget::globalHistory;
@@ -65,7 +65,8 @@ Widget::Widget(QWidget *parent)
             if (success) {
               addLogMessage("已连接到远程 SQL Server 数据库", "success");
               addLogMessage("正在从数据库同步数据...");
-              DbManager::instance().requestLatestSensorDataAsync(100);
+              DbManager::instance().requestLatestSensorDataAsync(
+                  Max_History_Data_Size);
             } else {
               addLogMessage(
                   QString("连接远程 SQL Server 失败: %1，将仅使用内存记录历史")
@@ -199,8 +200,8 @@ void Widget::onMessageReceived(const QByteArray &message,
     // 保存到全局历史（无论窗口是否打开）
     Widget::globalHistory.prepend(historyItem); // 最新在前
 
-    // 限制最多 Max_size 条
-    if (Widget::globalHistory.size() > Max_size) {
+    // 限制最多 Max_History_Data_Size 条
+    if (Widget::globalHistory.size() > Max_History_Data_Size) {
       Widget::globalHistory.removeLast();
     }
 
